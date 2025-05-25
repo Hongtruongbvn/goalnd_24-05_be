@@ -1,0 +1,296 @@
+definitions:
+  models.Comment:
+    properties:
+      content:
+        example: Nice post!
+        type: string
+      created_at:
+        type: string
+      id:
+        example: 1
+        type: integer
+      post_id:
+        type: string
+    type: object
+  models.ErrorResponse:
+    properties:
+      error:
+        example: Có lỗi xảy ra
+        type: string
+    type: object
+  models.MessageResponse:
+    properties:
+      message:
+        example: Thành công
+        type: string
+    type: object
+  models.Post:
+    properties:
+      comments:
+        type: string
+      content:
+        example: Content goes here
+        type: string
+      created_at:
+        type: string
+      id:
+        example: 1
+        type: integer
+      title:
+        example: My Post
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: Swagger social media
+  title: Demo Swagger API
+  version: "1.0"
+paths:
+  /comments/{id}:
+    delete:
+      description: Xoá bình luận theo ID
+      parameters:
+      - description: Comment ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.MessageResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: Xoá bình luận
+      tags:
+      - comments
+    put:
+      consumes:
+      - application/json
+      description: Cập nhật nội dung bình luận theo ID
+      parameters:
+      - description: Comment ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Comment
+        in: body
+        name: comment
+        required: true
+        schema:
+          $ref: '#/definitions/models.Comment'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.MessageResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: Cập nhật bình luận
+      tags:
+      - comments
+  /posts:
+    get:
+      description: Trả về danh sách tất cả bài viết
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Post'
+            type: array
+      summary: Lấy danh sách bài viết
+      tags:
+      - posts
+    post:
+      consumes:
+      - application/json
+      description: Tạo một bài viết
+      parameters:
+      - description: Post
+        in: body
+        name: post
+        required: true
+        schema:
+          $ref: '#/definitions/models.Post'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.MessageResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: Tạo bài viết mới
+      tags:
+      - posts
+  /posts/{id}:
+    delete:
+      description: Xoá bài viết theo ID
+      parameters:
+      - description: Post ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.MessageResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: Xoá bài viết
+      tags:
+      - posts
+    get:
+      description: Trả về chi tiết bài viết theo ID
+      parameters:
+      - description: Post ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.MessageResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: Lấy chi tiết bài viết
+      tags:
+      - posts
+    put:
+      consumes:
+      - application/json
+      description: Cập nhật bài viết theo ID
+      parameters:
+      - description: Post ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Post
+        in: body
+        name: post
+        required: true
+        schema:
+          $ref: '#/definitions/models.Post'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.MessageResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: Cập nhật bài viết
+      tags:
+      - posts
+  /posts/{post_id}/comments:
+    get:
+      description: Trả về tất cả bình luận thuộc về một bài viết theo post_id
+      parameters:
+      - description: Post ID
+        in: path
+        name: post_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Comment'
+            type: array
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: Lấy danh sách bình luận theo bài viết
+      tags:
+      - comments
+    post:
+      consumes:
+      - application/json
+      description: Tạo bình luận mới cho bài viết
+      parameters:
+      - description: Comment
+        in: body
+        name: comment
+        required: true
+        schema:
+          $ref: '#/definitions/models.Comment'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.MessageResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: Tạo bình luận
+      tags:
+      - comments
+swagger: "2.0"
